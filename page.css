@@ -1,0 +1,61 @@
+/* 공개 정적 페이지 공통 스타일 — 앱 다크 테마와 동일 계열 */
+:root {
+  --bg: #131312;
+  --surface: #1a1a19;
+  --line: #34332e;
+  --ink: #ffffff;
+  --dim: #c3c2b7;
+  --muted: #8a897e;
+  --s1: #3987e5;
+  --key-ink: #7fe0b6;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background:
+    radial-gradient(1100px 520px at 12% -8%, rgba(57, 135, 229, .13), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--dim);
+  font-family: 'Pretendard', 'Malgun Gothic', '맑은 고딕', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.85;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+.brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  color: var(--ink); font-weight: 700; font-size: 16px;
+  text-decoration: none; margin-bottom: 30px;
+}
+.brand svg { flex-shrink: 0; }
+h1 { color: var(--ink); font-size: 26px; letter-spacing: -0.8px; margin: 0 0 8px; }
+h2 {
+  color: var(--ink); font-size: 17px; margin: 34px 0 10px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--line);
+}
+p { margin: 10px 0; }
+ul { padding-left: 20px; margin: 10px 0; }
+li { margin: 6px 0; }
+b { color: var(--ink); }
+a { color: var(--s1); }
+.lead { color: var(--muted); font-size: 14px; margin-bottom: 4px; }
+.card {
+  background: linear-gradient(180deg, #1c1c1b, #191918);
+  border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 20px; margin: 16px 0;
+}
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+th, td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { background: #222220; color: var(--ink); font-weight: 600; white-space: nowrap; }
+.cta {
+  display: inline-block; background: linear-gradient(180deg, #4a95ee, #2e7ad8);
+  color: #fff; text-decoration: none; border-radius: 8px;
+  padding: 10px 20px; font-weight: 600; font-size: 14px; margin-top: 10px;
+}
+.foot {
+  margin-top: 50px; padding-top: 16px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 12.5px;
+}
+.foot a { color: var(--muted); margin-right: 14px; }
