@@ -1,0 +1,27 @@
+name: keepalive
+on:
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Supabase keepalive ping
+        run: |
+          curl -sf -X POST 'https://jakgkjmndwnomiozhfsf.supabase.co/rest/v1/page_views' \
+            -H 'apikey: sb_publishable_ETLUu2V7h4y3jyMaFewT8g_r9jJo9Rg' \
+            -H 'Authorization: Bearer sb_publishable_ETLUu2V7h4y3jyMaFewT8g_r9jJo9Rg' \
+            -H 'Content-Type: application/json' \
+            -d '{"kind":"keepalive","path":"cron","ref":"","device":"bot"}'
+      - name: Heartbeat commit
+        run: |
+          date -u +%FT%TZ > .keepalive
+          git config user.name 'keepalive'
+          git config user.email 'keepalive@users.noreply.github.com'
+          git add .keepalive
+          git commit -m keepalive || exit 0
+          git push || true

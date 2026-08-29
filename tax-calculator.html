@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#131312" />
+<meta name="description" content="해외주식 양도소득세 계산기 — 기본공제 250만원과 세율 22%를 적용해 올해 낼 세금과 남은 공제 여력을 바로 계산합니다. 손익통산 반영, 로그인 없이 무료." />
+<title>해외주식 양도소득세 계산기 — 250만원 공제와 남은 여력</title>
+<link rel="canonical" href="https://duostockledger.github.io/tax-calculator.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="주식 가계부" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://duostockledger.github.io/tax-calculator.html" />
+<meta property="og:title" content="해외주식 양도소득세 계산기 — 250만원 공제와 남은 여력" />
+<meta property="og:description" content="기본공제 250만원과 22% 세율로 올해 낼 세금과 세금 없이 더 팔 수 있는 금액을 계산합니다." />
+<meta property="og:image" content="https://duostockledger.github.io/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="./favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+<!-- 구글 애널리틱스 — 개인정보처리방침에 고지 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RTN5NM010Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RTN5NM010Q');
+</script>
+<link rel="stylesheet" href="./page.css" />
+<style>
+  .calc { display: grid; gap: 14px; margin: 20px 0 8px; }
+  .fld { display: grid; gap: 5px; }
+  .fld label { font-size: 13.5px; color: var(--dim); }
+  .fld .note { font-size: 12px; color: var(--muted); }
+  .fld input[type="text"] {
+    background: #26231a; color: #ffd76a; border: 1px solid var(--line); border-radius: 8px;
+    padding: 11px 13px; font-family: inherit; font-size: 16px; text-align: right;
+    font-variant-numeric: tabular-nums; width: 100%;
+  }
+  .fld input:focus { outline: 1px solid var(--s1); }
+  .out { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 4px 0 6px; }
+  @media (max-width: 560px) { .out { grid-template-columns: 1fr; } }
+  .box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; }
+  .box.hi { border-color: #1e4a3b; background: #10281f; }
+  .box.warn { border-color: #5c4a20; background: #241f12; }
+  .box .k { font-size: 12.5px; color: var(--muted); }
+  .box .v { font-size: 27px; font-weight: 800; letter-spacing: -1px; margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .box .s { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .box.hi .v { color: var(--key-ink); }
+  .box.warn .v { color: #ffd76a; }
+  .g-track { height: 10px; background: #222220; border-radius: 999px; overflow: hidden; margin-top: 10px; }
+  .g-fill { height: 100%; background: linear-gradient(90deg, #199e70, #7fe0b6); }
+  .g-fill.over { background: linear-gradient(90deg, #c98500, #e66767); }
+  .steps { font-size: 13.5px; color: var(--dim); line-height: 2; }
+  .steps span { color: var(--muted); }
+  .steps b { color: var(--ink); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a class="brand" href="./">
+  <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true">
+    <defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a95ee" /><stop offset="1" stop-color="#7fe0b6" />
+    </linearGradient></defs>
+    <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#bm)" />
+    <path d="M7 21 L13 15 L17 18 L25 9" stroke="#10151d" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="25" cy="9" r="2.2" fill="#10151d" />
+  </svg>
+  주식 가계부
+</a>
+
+<h1>해외주식 양도소득세 계산기</h1>
+<p class="lead">올해 낼 세금과, 세금 없이 더 팔 수 있는 금액을 계산합니다</p>
+
+<div class="calc">
+  <div class="fld">
+    <label for="gain">올해 실현한 <b>이익</b> 합계 (원)</label>
+    <input id="gain" type="text" inputmode="numeric" placeholder="4,000,000" />
+    <span class="note">1월 1일부터 지금까지 팔아서 이익이 난 것만 더한 금액</span>
+  </div>
+
+  <div class="fld">
+    <label for="loss">올해 실현한 <b>손실</b> 합계 (원)</label>
+    <input id="loss" type="text" inputmode="numeric" placeholder="1,000,000" />
+    <span class="note">손실은 양수로 넣으세요. 같은 해 이익과 자동으로 상계됩니다</span>
+  </div>
+
+  <div class="fld">
+    <label for="dom">국내주식 양도소득 (원)</label>
+    <input id="dom" type="text" inputmode="numeric" placeholder="0" />
+    <span class="note">대주주 등 국내주식 과세 대상이 있을 때만. 기본공제 250만원을 <b>합산해서 한 번</b> 받습니다</span>
+  </div>
+</div>
+
+<div class="out">
+  <div class="box">
+    <div class="k">손익통산 후 양도소득</div>
+    <div class="v" id="net">–</div>
+    <div class="s" id="sNet">이익 − 손실</div>
+  </div>
+  <div class="box warn">
+    <div class="k">예상 세액 (22%)</div>
+    <div class="v" id="tax">–</div>
+    <div class="s" id="sTax">기본공제 250만원 적용 후</div>
+  </div>
+</div>
+
+<div class="box hi">
+  <div class="k">세금 없이 더 팔 수 있는 금액</div>
+  <div class="v" id="room">–</div>
+  <div class="s" id="sRoom">기본공제 250만원 중 남은 한도</div>
+  <div class="g-track"><div class="g-fill" id="bar" style="width:0"></div></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+  <div class="steps" id="steps">숫자를 넣으면 계산 과정이 여기에 표시됩니다.</div>
+</div>
+
+<h2>어떻게 계산되나요</h2>
+<table>
+  <tr><th>과세 대상</th><td>1월 1일 ~ 12월 31일에 <b>실현한</b> 양도차익 (평가이익은 대상 아님)</td></tr>
+  <tr><th>손익통산</th><td>같은 해 이익과 손실을 <b>서로 상계</b>. 손실은 다음 해로 <b>이월되지 않습니다</b></td></tr>
+  <tr><th>기본공제</th><td><b>연 250만원</b>. 해외주식과 국내주식(과세 대상)을 <b>합산해 1회</b></td></tr>
+  <tr><th>세율</th><td><b>22%</b> (양도소득세 20% + 지방소득세 2%)</td></tr>
+  <tr><th>신고</th><td>매도한 해의 <b>다음 해 5월 1일~31일</b> 확정신고</td></tr>
+</table>
+
+<h2>12월에는 언제까지 팔아야 하나요</h2>
+<p>
+  과세 연도는 <b>주문을 넣은 날이 아니라 결제가 끝난 날</b>로 정해집니다.
+  미국 주식은 매도 후 영업일 기준으로 하루 뒤에 결제가 끝나므로,
+  <b>12월 31일에 팔면 결제일이 다음 해로 넘어가</b> 내년 실적이 됩니다.
+</p>
+<p>
+  연말에는 크리스마스와 신정 휴장이 끼어 영업일 계산이 매년 달라집니다.
+  가장 확실한 방법은 거래하는 <b>증권사가 11월쯤 올리는 "양도세 반영 매도 권장일" 공지</b>를 확인하는 것입니다.
+</p>
+
+<h2>부부라면 각자 250만원입니다</h2>
+<p>
+  기본공제는 <b>사람 단위</b>라 부부는 각자 250만원씩 받습니다.
+  같은 종목이라도 <b>명의를 나눠 두면 한 해에 500만원까지</b> 공제받을 수 있습니다.
+  다만 계산과 신고는 각자 따로 하므로, 명의별로 얼마를 실현했는지 따로 관리해야 합니다.
+</p>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+  <li>
+    <b>평가이익도 세금을 내나요?</b><br />
+    아닙니다. <b>팔아서 실현한</b> 차익만 과세 대상입니다. 들고만 있으면 아무리 올라도 세금이 없습니다.
+  </li>
+  <li>
+    <b>손실은 다음 해에 쓸 수 있나요?</b><br />
+    쓸 수 없습니다. <b>같은 해 이익하고만</b> 상계됩니다. 그래서 물려 있는 종목을 정리할 계획이라면
+    이익이 난 해에 맞춰 파는 편이 유리합니다.
+  </li>
+  <li>
+    <b>250만원은 해외·국내 각각인가요?</b><br />
+    아닙니다. <b>합산해서 연 1회</b>입니다. 각각 받는 것으로 아시는 분이 많은데 그렇지 않습니다.
+  </li>
+  <li>
+    <b>익절하고 바로 다시 사면 수익률은 그대로인가요?</b><br />
+    증권사 화면에서는 달라집니다. 실현한 차익이 재매수 금액에 섞여 <b>투자원금으로 잡히기</b> 때문에,
+    수익률이 실제보다 낮게 보입니다. <a href="./calculator.html">수익률 계산기</a>에서 확인해 보세요.
+  </li>
+</ul>
+
+<h2>매년 이걸 관리하려면</h2>
+<p>
+  명의별로 그 해 실현한 차익을 적어두면 <b>남은 공제 한도를 게이지로</b> 보여주고,
+  재매수로 부풀려진 원금을 걷어낸 <b>진짜 수익률</b>까지 계산해 주는 장부를 무료로 열어뒀습니다.
+</p>
+<a class="cta" href="./?demo=1">예시 데이터로 둘러보기</a>
+
+<p style="color:var(--muted); font-size:13.5px">
+  이 계산기는 브라우저 안에서만 계산합니다. 입력한 숫자는 어디로도 전송되지 않고 저장되지도 않습니다.<br />
+  일반적인 기준으로 계산한 <b>참고용</b>이며 세무 자문이 아닙니다. 세법은 바뀔 수 있고 개인 상황에 따라 달라지므로,
+  실제 신고 전에는 국세청 안내와 거래 증권사 공지를 확인하시거나 세무 전문가와 상담하세요.
+</p>
+
+<div class="foot">
+  <a href="./calculator.html">수익률 계산기</a>
+  <a href="./tax-calculator.html">양도소득세 계산기</a>
+  <a href="./guide.html">사용 가이드</a>
+  <a href="./about.html">소개</a>
+  <a href="./contact.html">문의</a>
+  <a href="./privacy.html">개인정보처리방침</a>
+  <br /><br />
+  주식 가계부 — 기록·관리 도구이며 투자·세무 자문이 아닙니다.
+</div>
+
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "해외주식 양도소득세 기본공제 250만원은 해외와 국내 각각 받나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "아닙니다. 해외주식과 국내주식(과세 대상)을 합산해 연 1회 250만원을 공제합니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "해외주식 평가이익도 양도소득세를 내나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "아닙니다. 팔아서 실현한 차익만 과세 대상입니다. 보유만 하고 있으면 세금이 없습니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "해외주식 양도차손은 다음 해로 이월되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이월되지 않습니다. 같은 해에 실현한 이익하고만 상계됩니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "12월에 해외주식을 언제까지 팔아야 올해 실적이 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "과세 연도는 매도일이 아니라 결제일 기준입니다. 12월 31일에 팔면 결제일이 다음 해로 넘어가 내년 실적이 됩니다. 증권사가 안내하는 양도세 반영 매도 권장일을 확인하세요." }
+    }
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var DEDUCT = 2500000, RATE = 0.22;
+  var el = {};
+  ['gain', 'loss', 'dom', 'net', 'sNet', 'tax', 'sTax', 'room', 'sRoom', 'bar', 'steps']
+    .forEach(function (k) { el[k] = document.getElementById(k); });
+
+  var won = function (n) { return '₩' + Math.round(n).toLocaleString('ko-KR'); };
+
+  function group(raw) {
+    var neg = raw.indexOf('-') === 0;
+    var body = raw.replace(/-/g, '');
+    return (neg ? '-' : '') + body.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  function onInput(e) {
+    var t = e.target;
+    var before = t.value.slice(0, t.selectionStart);
+    var kept = (before.match(/[\d-]/g) || []).length;
+    var raw = (t.value.match(/-/) ? '-' : '') + t.value.replace(/[^\d]/g, '');
+    var next = group(raw);
+    var i = 0, seen = 0;
+    while (i < next.length && seen < kept) { if (/[\d-]/.test(next[i])) seen++; i++; }
+    t.value = next;
+    t.setSelectionRange(i, i);
+    calc();
+  }
+  var num = function (k) {
+    var v = el[k].value.replace(/[^\d-]/g, '');
+    return v === '' || v === '-' ? 0 : Number(v);
+  };
+
+  function calc() {
+    var gain = num('gain'), loss = num('loss'), dom = num('dom');
+    if (!gain && !loss && !dom) {
+      ['net', 'tax', 'room'].forEach(function (k) { el[k].textContent = '–'; });
+      el.sNet.textContent = '이익 − 손실';
+      el.sTax.textContent = '기본공제 250만원 적용 후';
+      el.sRoom.textContent = '기본공제 250만원 중 남은 한도';
+      el.bar.style.width = '0';
+      el.steps.innerHTML = '숫자를 넣으면 계산 과정이 여기에 표시됩니다.';
+      return;
+    }
+
+    var net = gain - loss + dom;              // 손익통산 (국내 과세분 합산)
+    var base = Math.max(0, net - DEDUCT);     // 과세표준
+    var tax = base * RATE;
+    var used = Math.max(0, Math.min(net, DEDUCT));   // 공제 중 쓴 만큼 (막대 표시용)
+    // 세금이 0으로 유지되는 조건은 (통산 + 추가실현) ≤ 250만.
+    // 통산이 마이너스면 그 손실만큼 더 실현할 수 있다 (같은 해 안에서는 상계되므로).
+    var room = Math.max(0, DEDUCT - net);
+
+    el.net.textContent = won(net);
+    el.sNet.textContent = net < 0 ? '손실이 더 큽니다 — 낼 세금이 없습니다' : '이익 − 손실' + (dom ? ' + 국내분' : '');
+
+    el.tax.textContent = won(tax);
+    el.sTax.textContent = base > 0 ? '과세표준 ' + won(base) + ' × 22%'
+      : net < 0 ? '손실이 더 커서 낼 세금이 없습니다' : '공제 범위 안이라 세금이 없습니다';
+
+    el.room.textContent = won(room);
+    el.sRoom.textContent = room > 0
+      ? '지금 ' + won(room) + '까지 더 실현해도 세금이 없습니다'
+      : '공제를 모두 썼습니다. 더 실현하면 22%가 붙습니다';
+    el.bar.style.width = Math.min(100, (used / DEDUCT) * 100) + '%';
+    el.bar.className = 'g-fill' + (room === 0 ? ' over' : '');
+
+    var rows = [
+      ['실현 이익', won(gain)],
+      loss ? ['− 실현 손실', won(loss)] : null,
+      dom ? ['+ 국내주식 양도소득', won(dom)] : null,
+      ['= 손익통산', won(net)],
+      ['− 기본공제', won(Math.min(Math.max(0, net), DEDUCT))],
+      ['= 과세표준', won(base)],
+      ['× 22%', won(tax)],
+    ].filter(Boolean);
+    el.steps.innerHTML = rows.map(function (r) {
+      return '<span>' + r[0] + '</span> &nbsp; <b>' + r[1] + '</b>';
+    }).join('<br />');
+  }
+
+  ['gain', 'loss', 'dom'].forEach(function (k) { el[k].addEventListener('input', onInput); });
+})();
+</script>
+</body>
+</html>

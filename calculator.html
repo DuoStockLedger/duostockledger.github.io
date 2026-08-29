@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#131312" />
+<meta name="description" content="배당 재투자 수익률 계산기 — 증권사 앱이 원금에 더해버린 배당 재투자와 리밸런싱 실현차익을 빼고, 내 통장에서 실제로 나간 돈 기준의 진짜 수익률을 바로 계산합니다. 로그인 없이 무료." />
+<title>배당 재투자 수익률 계산기 — 내 돈 기준 진짜 수익률</title>
+<link rel="canonical" href="https://duostockledger.github.io/calculator.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="주식 가계부" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://duostockledger.github.io/calculator.html" />
+<meta property="og:title" content="배당 재투자 수익률 계산기 — 내 돈 기준 진짜 수익률" />
+<meta property="og:description" content="배당 재투자와 리밸런싱 차익을 뺀 순수 원금으로 진짜 수익률을 계산합니다. 로그인 없이 무료." />
+<meta property="og:image" content="https://duostockledger.github.io/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="./favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+<!-- 구글 애널리틱스 — 개인정보처리방침에 고지 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RTN5NM010Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RTN5NM010Q');
+</script>
+<link rel="stylesheet" href="./page.css" />
+<style>
+  .calc { display: grid; gap: 14px; margin: 20px 0 8px; }
+  .fld { display: grid; gap: 5px; }
+  .fld label { font-size: 13.5px; color: var(--dim); }
+  .fld .note { font-size: 12px; color: var(--muted); }
+  .fld input[type="text"] {
+    background: #26231a; color: #ffd76a; border: 1px solid var(--line); border-radius: 8px;
+    padding: 11px 13px; font-family: inherit; font-size: 16px; text-align: right;
+    font-variant-numeric: tabular-nums; width: 100%;
+  }
+  .fld input:focus { outline: 1px solid var(--s1); }
+  .chk { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--dim); cursor: pointer; }
+  .out { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 4px 0 6px; }
+  @media (max-width: 560px) { .out { grid-template-columns: 1fr; } }
+  .box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; }
+  .box.hi { border-color: #1e4a3b; background: #10281f; }
+  .box .k { font-size: 12.5px; color: var(--muted); }
+  .box .v { font-size: 27px; font-weight: 800; letter-spacing: -1px; margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .box .s { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .box.hi .v { color: var(--key-ink); }
+  .gap { text-align: center; font-size: 14.5px; color: var(--dim); margin: 2px 0 6px; }
+  .gap b { color: var(--key-ink); font-size: 17px; }
+  .steps { font-size: 13.5px; color: var(--dim); line-height: 2; }
+  .steps span { color: var(--muted); }
+  .steps b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .neg { color: #e66767 !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a class="brand" href="./">
+  <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true">
+    <defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a95ee" /><stop offset="1" stop-color="#7fe0b6" />
+    </linearGradient></defs>
+    <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#bm)" />
+    <path d="M7 21 L13 15 L17 18 L25 9" stroke="#10151d" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="25" cy="9" r="2.2" fill="#10151d" />
+  </svg>
+  주식 가계부
+</a>
+
+<h1>배당 재투자 수익률 계산기</h1>
+<p class="lead">증권사 앱이 원금에 더해버린 금액을 빼고, 내 돈 기준으로 다시 계산합니다</p>
+
+<div class="calc">
+  <div class="fld">
+    <label for="cost">증권사 앱에 표시된 투자원금 (원)</label>
+    <input id="cost" type="text" inputmode="numeric" placeholder="39,000,000" />
+    <span class="note">계좌 화면의 '투자원금' 또는 '매입금액'을 그대로 넣으세요</span>
+  </div>
+
+  <div class="fld">
+    <label for="value">현재 평가액 (원)</label>
+    <input id="value" type="text" inputmode="numeric" placeholder="45,000,000" />
+  </div>
+
+  <div class="fld">
+    <label for="div">그동안 받은 배당금 합계 (원)</label>
+    <input id="div" type="text" inputmode="numeric" placeholder="3,000,000" />
+    <label class="chk"><input id="divRe" type="checkbox" checked /> 이 배당을 다시 주식 사는 데 썼다</label>
+    <span class="note">생활비로 쓰셨다면 체크를 푸세요. 그건 이미 꺼내 쓴 수익이라 원금에서 빼면 안 됩니다</span>
+  </div>
+
+  <div class="fld">
+    <label for="rebal">리밸런싱으로 실현한 차익 합계 (원)</label>
+    <input id="rebal" type="text" inputmode="numeric" placeholder="0" />
+    <label class="chk"><input id="rebalRe" type="checkbox" checked /> 판 돈으로 다시 사들였다</label>
+    <span class="note">양도세 250만원 공제를 채우려고 익절 후 재매수하신 금액입니다</span>
+  </div>
+</div>
+
+<div class="out">
+  <div class="box">
+    <div class="k">증권사 앱이 보여주는 수익률</div>
+    <div class="v" id="rBook">–</div>
+    <div class="s" id="sBook">투자원금 대비</div>
+  </div>
+  <div class="box hi">
+    <div class="k">내 돈 기준 진짜 수익률</div>
+    <div class="v" id="rReal">–</div>
+    <div class="s" id="sReal">순수 투자원금 대비</div>
+  </div>
+</div>
+<p class="gap" id="gap"></p>
+
+<div class="card">
+  <div class="steps" id="steps">
+    숫자를 넣으면 계산 과정이 여기에 표시됩니다.
+  </div>
+</div>
+
+<h2>왜 증권사 수익률이 낮게 나오나요</h2>
+<p>
+  배당금으로 주식을 더 사면 증권사 입장에서는 그냥 <b>매수</b>입니다.
+  평균 단가에 반영되고 <b>투자원금에도 더해집니다.</b> 회계상 틀린 계산은 아니지만,
+  "내가 얼마를 넣어서 얼마가 됐나"를 묻는 사람에게는 다른 답을 줍니다.
+</p>
+<p>
+  배당을 재투자할수록 원금이 커지고, 수익률 계산의 분모가 커지니 결과는 낮아 보입니다.
+  <b>성실하게 재투자한 사람일수록 성과가 깎여 보이는 구조</b>입니다.
+</p>
+<p>
+  연말에 해외주식 양도소득 기본공제 250만원을 채우려고 익절 후 재매수하는 경우도 마찬가지입니다.
+  실현한 차익까지 재매수 금액에 섞여 원금으로 잡히고, 매년 반복하면 이 왜곡이 계속 쌓입니다.
+</p>
+
+<h2>계산 공식</h2>
+<table>
+  <tr><th>순수 투자원금</th><td>총 투자원금 − 배당 재투자액 − 리밸런싱 실현차익</td></tr>
+  <tr><th>진짜 수익률</th><td>평가액 ÷ 순수 투자원금 − 1</td></tr>
+  <tr><th>장부 수익률</th><td>평가액 ÷ 총 투자원금 − 1 <span style="color:var(--muted)">(증권사 방식)</span></td></tr>
+</table>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+  <li>
+    <b>배당을 생활비로 썼는데도 빼야 하나요?</b><br />
+    빼면 안 됩니다. 재투자하지 않은 배당은 내가 넣은 원금이 아니라 <b>이미 꺼내 쓴 수익</b>입니다.
+    계산기에서 재투자 체크를 풀면 원금에서 차감하지 않습니다.
+  </li>
+  <li>
+    <b>손실이 난 리밸런싱은요?</b><br />
+    실현차익이 마이너스라면 그만큼 원금이 늘어난 것으로 보는 게 맞습니다. 음수로 넣으시면 됩니다.
+  </li>
+  <li>
+    <b>연금저축이나 ISA에도 쓸 수 있나요?</b><br />
+    계산 방식은 같습니다. 계좌 종류와 무관하게 배당·분배금을 재투자했다면 같은 왜곡이 생깁니다.
+  </li>
+  <li>
+    <b>매달 이렇게 계산하려면요?</b><br />
+    월말 잔고만 옮겨 적으면 이 계산을 자동으로 해주는 장부를 무료로 열어뒀습니다. 아래에서 확인하세요.
+  </li>
+</ul>
+
+<h2>매달 자동으로 보고 싶다면</h2>
+<p>
+  이 계산기는 한 시점의 값만 봅니다. 월말 잔고만 적어두면 <b>월별 추이와 연도별 수익률까지</b>
+  자동으로 계산해 주는 장부를 만들어 무료로 열어뒀습니다.
+  배우자나 동업자와 <b>같은 장부를 실시간으로</b> 쓸 수도 있습니다.
+</p>
+<a class="cta" href="./?demo=1">예시 데이터로 둘러보기</a>
+
+<p style="color:var(--muted); font-size:13.5px">
+  이 계산기는 브라우저 안에서만 계산합니다. 입력한 숫자는 어디로도 전송되지 않고 저장되지도 않습니다.<br />
+  기록·관리 도구이며 투자·세무 자문이 아닙니다.
+</p>
+
+<div class="foot">
+  <a href="./calculator.html">수익률 계산기</a>
+  <a href="./tax-calculator.html">양도소득세 계산기</a>
+  <a href="./guide.html">사용 가이드</a>
+  <a href="./about.html">소개</a>
+  <a href="./contact.html">문의</a>
+  <a href="./privacy.html">개인정보처리방침</a>
+  <br /><br />
+  주식 가계부 — 기록·관리 도구이며 투자·세무 자문이 아닙니다.
+</div>
+
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "배당을 생활비로 썼는데도 원금에서 빼야 하나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "빼면 안 됩니다. 재투자하지 않은 배당은 내가 넣은 원금이 아니라 이미 꺼내 쓴 수익입니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "증권사 앱 수익률은 왜 실제보다 낮게 나오나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "배당금으로 주식을 더 사면 증권사는 이를 매수로 보고 투자원금에 더합니다. 원금이 커지면 수익률 계산의 분모가 커져 결과가 낮아 보입니다. 리밸런싱으로 실현한 차익을 재매수한 경우도 같습니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "진짜 수익률은 어떻게 계산하나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "순수 투자원금 = 총 투자원금 − 배당 재투자액 − 리밸런싱 실현차익. 진짜 수익률 = 평가액 ÷ 순수 투자원금 − 1 로 계산합니다." }
+    }
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var ids = ['cost', 'value', 'div', 'rebal'];
+  var el = {};
+  ids.concat(['divRe', 'rebalRe', 'rBook', 'sBook', 'rReal', 'sReal', 'gap', 'steps'])
+     .forEach(function (k) { el[k] = document.getElementById(k); });
+
+  var won = function (n) { return '₩' + Math.round(n).toLocaleString('ko-KR'); };
+  var pct = function (n) { return (n * 100).toFixed(1) + '%'; };
+
+  // 천 단위 쉼표를 넣으면서 커서가 밀리지 않게 앞쪽 숫자 개수로 되돌린다
+  function group(raw) {
+    var neg = raw.indexOf('-') === 0;
+    var body = raw.replace(/-/g, '');
+    return (neg ? '-' : '') + body.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  function onInput(e) {
+    var t = e.target;
+    var before = t.value.slice(0, t.selectionStart);
+    var kept = (before.match(/[\d-]/g) || []).length;
+    var raw = (t.value.match(/-/) ? '-' : '') + t.value.replace(/[^\d]/g, '');
+    var next = group(raw);
+    var i = 0, seen = 0;
+    while (i < next.length && seen < kept) { if (/[\d-]/.test(next[i])) seen++; i++; }
+    t.value = next;
+    t.setSelectionRange(i, i);
+    calc();
+  }
+  var num = function (k) {
+    var v = el[k].value.replace(/[^\d-]/g, '');
+    return v === '' || v === '-' ? 0 : Number(v);
+  };
+
+  function calc() {
+    var cost = num('cost'), value = num('value');
+    var dv = num('div'), rb = num('rebal');
+    var cut = (el.divRe.checked ? dv : 0) + (el.rebalRe.checked ? rb : 0);
+    var pure = cost - cut;
+
+    if (!cost || !value) {
+      el.rBook.textContent = '–'; el.rReal.textContent = '–';
+      el.sBook.textContent = '투자원금 대비'; el.sReal.textContent = '순수 투자원금 대비';
+      el.gap.textContent = '';
+      el.steps.innerHTML = '숫자를 넣으면 계산 과정이 여기에 표시됩니다.';
+      return;
+    }
+
+    var rBook = value / cost - 1;
+    el.rBook.textContent = pct(rBook);
+    el.rBook.className = 'v' + (rBook < 0 ? ' neg' : '');
+    el.sBook.textContent = won(cost) + ' 기준';
+
+    if (pure <= 0) {
+      el.rReal.textContent = '–';
+      el.sReal.textContent = '순수 원금이 0 이하입니다. 입력을 확인해 주세요';
+      el.gap.textContent = '';
+    } else {
+      var rReal = value / pure - 1;
+      el.rReal.textContent = pct(rReal);
+      el.rReal.className = 'v' + (rReal < 0 ? ' neg' : '');
+      el.sReal.textContent = won(pure) + ' 기준';
+      var d = (rReal - rBook) * 100;
+      el.gap.innerHTML = cut > 0
+        ? '같은 계좌인데 <b>' + d.toFixed(1) + '%p</b> 차이가 납니다'
+        : '재투자한 금액이 없어 두 수익률이 같습니다';
+    }
+
+    var rows = [
+      ['증권사 투자원금', won(cost)],
+      el.divRe.checked && dv ? ['− 배당 재투자', won(dv)] : null,
+      el.rebalRe.checked && rb ? ['− 리밸런싱 실현차익', won(rb)] : null,
+      ['= 순수 투자원금', won(pure)],
+      ['현재 평가액', won(value)],
+      ['불어난 금액', won(value - pure)],
+    ].filter(Boolean);
+    el.steps.innerHTML = rows.map(function (r) {
+      return '<span>' + r[0] + '</span> &nbsp; <b>' + r[1] + '</b>';
+    }).join('<br />');
+  }
+
+  ids.forEach(function (k) { el[k].addEventListener('input', onInput); });
+  el.divRe.addEventListener('change', calc);
+  el.rebalRe.addEventListener('change', calc);
+})();
+</script>
+</body>
+</html>

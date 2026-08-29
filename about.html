@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#131312" />
+<meta name="description" content="주식 가계부 소개 — 배당 재투자와 리밸런싱을 뺀 내 돈 기준 진짜 수익률을 계산하는 2인 공유 투자 장부." />
+<title>소개 — 주식 가계부</title>
+<link rel="canonical" href="https://duostockledger.github.io/about.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="주식 가계부" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://duostockledger.github.io/about.html" />
+<meta property="og:title" content="소개 — 주식 가계부" />
+<meta property="og:description" content="주식 가계부 소개 — 배당 재투자와 리밸런싱을 뺀 내 돈 기준 진짜 수익률을 계산하는 2인 공유 투자 장부." />
+<meta property="og:image" content="https://duostockledger.github.io/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="./favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+<!-- 구글 애널리틱스 — 개인정보처리방침에 고지 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RTN5NM010Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RTN5NM010Q');
+</script>
+<link rel="stylesheet" href="./page.css" />
+</head>
+<body>
+<div class="wrap">
+
+<a class="brand" href="./">
+  <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true">
+    <defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a95ee" /><stop offset="1" stop-color="#7fe0b6" />
+    </linearGradient></defs>
+    <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#bm)" />
+    <path d="M7 21 L13 15 L17 18 L25 9" stroke="#10151d" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="25" cy="9" r="2.2" fill="#10151d" />
+  </svg>
+  주식 가계부
+</a>
+
+<h1>소개</h1>
+<p class="lead">증권사 앱이 알려주지 않는 내 돈 기준 진짜 수익률</p>
+
+<h2>왜 만들었나</h2>
+<p>
+  배당 ETF에 장기 투자하면서 엑셀로 기록을 해왔습니다. 그런데 계속 걸리는 게 있었습니다.
+</p>
+<p>
+  <b>증권사 앱의 수익률에는 함정이 있습니다.</b>
+  배당을 재투자하면 그 돈이 투자원금에 합산되고 리밸런싱으로 실현한 차익도 다시 사들이면 원금이 됩니다.
+  그래서 오래 투자할수록 원금이 부풀고 <b>내 통장에서 실제로 나간 돈 대비 얼마나 벌었는지</b>는
+  화면 어디에도 나오지 않습니다.
+</p>
+<p>
+  이걸 엑셀 수식으로 따로 계산해 봤지만 해가 지날수록 관리가 감당이 안 됐고
+  두 사람이 같은 파일을 나눠 쓰다 보니 버전이 갈리고 휴대폰에서 보기도 불편했습니다.
+  그래서 웹으로 직접 만들었습니다.
+</p>
+
+<h2>무엇을 해주나</h2>
+<div class="card">
+  순수 투자원금 = 총 투자원금 − 배당 재투자 − 리밸런싱 실현차익<br />
+  <b style="color:var(--key-ink)">진짜 수익률 = 평가액 ÷ 순수 투자원금 − 1</b>
+</div>
+<ul>
+  <li><b>두 기준을 나란히</b> — 증권사 방식 수익률과 내 돈 기준 수익률을 함께 보여줍니다.</li>
+  <li><b>월 5분</b> — 월말에 증권사 잔고만 옮겨 적으면 나머지는 자동 계산됩니다.</li>
+  <li><b>둘이 실시간 공유</b> — 초대 링크 하나로 배우자나 동업자와 같은 장부를 씁니다.
+      한 사람이 고치면 상대 화면도 바로 바뀝니다.</li>
+  <li><b>엑셀 그대로</b> — 쓰던 엑셀을 업로드해 옮겨오고 언제든 엑셀로 백업합니다.</li>
+  <li><b>양도차익 관리</b> — 연간 실현차익을 1인당 목표(기본 250만원) 대비로 추적합니다.</li>
+</ul>
+
+<h2>원칙</h2>
+<ul>
+  <li><b>무료</b> — 결제 절차가 없습니다.</li>
+  <li><b>최소 수집</b> — 로그인용 구글 이메일 외에는 받지 않습니다.
+      방문 통계도 쿠키 없이 익명으로만 집계합니다.</li>
+  <li><b>내 데이터는 내 것</b> — 언제든 엑셀과 JSON으로 전부 내려받을 수 있고
+      한 번에 지울 수도 있습니다.</li>
+  <li><b>투자 자문이 아님</b> — 기록하고 계산하는 도구일 뿐입니다.
+      종목 추천이나 매매 신호는 제공하지 않습니다.</li>
+</ul>
+
+<h2>만든 사람</h2>
+<p>
+  개인 개발자가 만들고 운영합니다. 부부가 실제 자산 관리에 매달 쓰고 있고
+  쓰다가 불편한 점이 나오면 그때그때 고치고 있습니다.
+  건의나 버그 제보는 언제든 환영합니다.
+</p>
+
+<a class="cta" href="./">시작하기</a>
+
+<div class="foot">
+  <a href="./calculator.html">수익률 계산기</a>
+  <a href="./tax-calculator.html">양도소득세 계산기</a>
+  <a href="./guide.html">사용 가이드</a>
+  <a href="./about.html">소개</a>
+  <a href="./contact.html">문의</a>
+  <a href="./privacy.html">개인정보처리방침</a>
+  <br /><br />
+  주식 가계부 — 기록·관리 도구이며 투자·세무 자문이 아닙니다.
+</div>
+
+</div>
+</body>
+</html>

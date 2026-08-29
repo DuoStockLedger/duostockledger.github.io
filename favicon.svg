@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a95ee" />
+      <stop offset="1" stop-color="#7fe0b6" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="url(#g)" />
+  <!-- 16px에서도 뭉개지지 않도록 헤더 로고보다 선을 굵게 잡았다 -->
+  <path d="M6.5 22.5 L13 15.5 L17.5 19 L24.5 9.5" stroke="#0e1419" stroke-width="3.4"
+        fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="24.5" cy="9.5" r="3" fill="#0e1419" />
+</svg>

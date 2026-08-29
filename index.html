@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#131312" />
+    <meta name="description" content="주식 가계부 — 증권사 앱이 알려주지 않는 내 돈 기준 수익률을 계산하는 공유 배당 가계부." />
+    <title>주식 가계부 — 공유 배당 가계부</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- 이 앱은 주소가 ?tab=, ?demo= 로 갈라지지만 문서는 하나다.
+         중복 문서로 잡히지 않게 대표 주소를 하나로 고정한다. -->
+    <link rel="canonical" href="https://duostockledger.github.io/" />
+
+    <!-- 카톡·페북·트위터에 링크를 붙였을 때 뜨는 카드 -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="주식 가계부" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:url" content="https://duostockledger.github.io/" />
+    <meta property="og:title" content="주식 가계부 — 내 돈 기준 진짜 수익률" />
+    <meta property="og:description" content="배당 재투자와 리밸런싱 실현차익을 뺀 순수 원금으로 수익률을 계산하는 2인 공유 배당 가계부. 무료." />
+    <meta property="og:image" content="https://duostockledger.github.io/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "주식 가계부",
+      "alternateName": "DuoStockLedger",
+      "url": "https://duostockledger.github.io/",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "ko",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+      "description": "증권사 앱이 알려주지 않는 내 돈 기준 수익률을 계산하는 2인 공유 배당 투자 장부. 배당 재투자와 리밸런싱 실현차익을 뺀 순수 투자원금으로 수익률을 산출한다."
+    }
+    </script>
+
+    <!-- 방문 집계는 두 갈래다.
+         ① 자체 구현 (src/lib/track.ts → Supabase page_views, 무쿠키, 관리자 탭에서 열람)
+         ② 구글 애널리틱스 (쿠키 사용 — 개인정보처리방침에 고지·거부 방법 안내)
+         장부 내용은 어느 쪽으로도 전송되지 않는다. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RTN5NM010Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RTN5NM010Q');
+    </script>
+
+    <script type="module" crossorigin src="/assets/index-Clp6xg6Q.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DEl2LK3-.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- 자바스크립트 없이 접근하는 크롤러·브라우저를 위한 최소 안내와 링크 -->
+    <noscript>
+      <div style="max-width:720px;margin:40px auto;padding:0 20px;color:#c3c2b7;font-family:system-ui,sans-serif;line-height:1.8">
+        <h1 style="color:#fff">주식 가계부</h1>
+        <p>
+          증권사 앱이 알려주지 않는 <b style="color:#fff">내 돈 기준 진짜 수익률</b>을 계산하는 2인 공유 배당 투자 장부입니다.
+          배당 재투자와 리밸런싱 실현차익을 뺀 순수 투자원금 기준으로 수익률을 계산합니다.
+        </p>
+        <p>
+          증권사 앱은 배당으로 다시 산 주식과 리밸런싱으로 실현한 차익까지 <b style="color:#fff">투자원금에 더합니다.</b>
+          내 통장에서 나간 돈은 그대로인데 원금만 불어나니, 수익률 계산의 분모가 커져 실제보다 낮게 보입니다.
+          성실하게 재투자한 사람일수록 성과가 깎여 보이는 구조입니다.
+        </p>
+        <p>
+          이 서비스는 월말 잔고만 옮겨 적으면 그 왜곡을 걷어낸 수익률을 계산합니다.
+          <b style="color:#fff">순수 투자원금 = 총 투자원금 − 배당 재투자액 − 리밸런싱 실현차익</b>,
+          <b style="color:#fff">진짜 수익률 = 평가액 ÷ 순수 투자원금 − 1</b>. 무료이고 구글 로그인 하나로 시작합니다.
+        </p>
+        <p>이 화면을 보려면 자바스크립트가 필요합니다. 아래 페이지는 자바스크립트 없이도 열립니다.</p>
+        <ul>
+          <li><a href="/calculator.html" style="color:#3987e5">배당 재투자 수익률 계산기</a> — 로그인 없이 바로 계산</li>
+          <li><a href="/tax-calculator.html" style="color:#3987e5">해외주식 양도소득세 계산기</a> — 250만원 공제와 남은 여력</li>
+          <li><a href="/guide.html" style="color:#3987e5">사용 가이드</a> — 화면으로 보는 기록 방법</li>
+          <li><a href="/about.html" style="color:#3987e5">서비스 소개</a></li>
+          <li><a href="/contact.html" style="color:#3987e5">문의</a> · <a href="/privacy.html" style="color:#3987e5">개인정보처리방침</a></li>
+        </ul>
+      </div>
+    </noscript>
+  </body>
+</html>
